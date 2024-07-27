@@ -17,7 +17,7 @@ func main() {
 	mux.HandleFunc("GET /sign_in", handlers.GetSignIn(efs))
 	mux.HandleFunc("GET /", handlers.GetIndex(efs))
 	mux.HandleFunc("POST /", handlers.PostIndex(efs))
-	if err := http.ListenAndServe("127.0.0.1:8080", mux); err != nil {
+	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Printf("Error: %s\n", err.Error())
 	}
 }

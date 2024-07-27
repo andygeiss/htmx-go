@@ -1,8 +1,6 @@
 FROM golang:latest AS build
-WORKDIR /go-build/
+WORKDIR /app
 ADD . .
-RUN go build -ldflags="-s -w" -o server main.go
-
-FROM scratch
-COPY --from=build /go-build/server /server
-ENTRYPOINT [ "/server" ]
+RUN go build -ldflags="-s -w" -o /app
+EXPOSE 8080
+ENTRYPOINT [ "/app" ]
