@@ -1,0 +1,144 @@
+:root {
+    /* Colors */
+    --background: linear-gradient(
+        45deg,
+        var(--color-text) 10%,
+        var(--color-light-blue) 30%,
+        var(--color-blue) 50%,
+        var(--color-light-blue) 70%,
+        var(--color-text) 90%
+    );
+    --color-text: white;
+    --color-aqua: #00a29c;
+    --color-black: #000000;
+    --color-blue: #00add8;
+    --color-fuchsia: #ce3262;
+    --color-light-blue: #5dc9e2;
+    --color-yellow: #fddd00;
+    /* Fonts */
+    --font-family: "Poppins", sans-serif;
+}
+
+/* Reset */
+* {
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+/* Custom */
+body {
+    align-items: center;
+    background: var(--background);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.input-box input {
+    background: transparent;
+    border: none;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 32px;
+    color: var(--color-text);
+    font-size: 14pt;
+    height: 100%;
+    margin: 0 16px;
+    padding: 0 16px;
+    outline: none;
+    width: 100%;
+}
+
+.input-box input:hover {
+    border: 2px solid var(--color-text);
+}
+
+.input-box button {
+    background: var(--color-text);
+    border: none;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 32px;
+    font-size: 14pt;
+    height: 100%;
+    margin: 0 16px;
+    padding: 0 16px;
+    width: 200px;
+}
+
+.input-box button:hover {
+    background: transparent;
+    border: 2px solid var(--color-text);
+    color: var(--color-text);
+}
+
+#login {
+    align-content: center;
+    background: var(--color-blue);
+    border-radius: 16px;
+    box-shadow: 0 0 32px rgba(0, 0, 0, 0.35);
+    color: white;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    padding: 16px;
+    width: 420px;
+}
+
+#login h1 {
+    font-size: 32px;
+    margin-top: 16px;
+    text-align: center;
+}
+
+#login .input-box {
+    align-items: center;
+    display: flex;
+    background: transparent;
+    height: 64px;
+    justify-content: center;
+    margin: 16px 0;
+    padding: 8px 16px;
+    width: 100%;
+}
+
+#logo {
+    bottom: 32px;
+    left: 32px;
+    position: absolute;
+    width: 384px;
+}
+
+#remember-forgot {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+}
+
+#remember-forgot a {
+    color: white;
+}
+
+#remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+#register-link {
+    margin-bottom: 16px;
+    margin-top: 16px;
+    text-align: center;
+}
+
+#register-link a {
+    color: white;
+    font-weight: 600;
+    margin-left: 16px;
+}
+
+#register-link a:hover {
+    text-decoration: underline;
+}
