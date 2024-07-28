@@ -1,6 +1,6 @@
-<form action="/" method="post">
+<form action="/register" method="post">
     <div class="input-form">
-        <h1>Login</h1>
+        <h1>Register</h1>
         <div class="input-box">
             <label for="username"> Username </label>
             <input type="text" id="username" name="username" />
@@ -11,16 +11,9 @@
             <input type="password" name="password" />
             <i class="bx bxs-lock-alt"></i>
         </div>
-        <div id="remember-forgot">
-            <label> <input type="checkbox" /> Remember me </label>
-            <a hx-get="/forgot" hx-target="body">Forgot Password?</a></p>
-        </div>
         <div class="input-box">
-            <button>Login</button>
-        </div>
-        <div id="register-link">
-            <p>Don't have an account?<a hx-get="/register" hx-target="body">Register</a></p>
+            <button>Register</button>
         </div>
     </div>
 </form>
-<img id="logo" src="/assets/images/logo.svg">
+<img id="logo" src="/assets/images/logo.svg" />

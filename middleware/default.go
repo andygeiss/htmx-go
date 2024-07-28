@@ -5,7 +5,7 @@ import (
 )
 
 var excluded = []string{
-	"/", "/sign_in",
+	"/", "/register", "/sign_in",
 }
 
 func Default(next http.HandlerFunc) http.HandlerFunc {
