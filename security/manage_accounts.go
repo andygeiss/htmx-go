@@ -1,18 +1,22 @@
 package security
 
 import (
+	"encoding/json"
 	"errors"
+	"os"
 	"sync"
 )
 
 type AccountManager struct {
-	accounts map[string]string
-	mutex    sync.Mutex
+	accounts    map[string]string
+	accountFile string
+	mutex       sync.Mutex
 }
 
 func (a *AccountManager) IsUsernamePasswordValid(username, password string) bool {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
+	a.readAccounts()
 	if wanted, exists := a.accounts[username]; exists {
 		return password == wanted
 	}
@@ -29,15 +33,40 @@ func (a *AccountManager) RegisterAccount(username, password string) error {
 		return errors.New("This username is already registered")
 	}
 	a.accounts[username] = password
+	if err := a.writeAccounts(); err != nil {
+		return errors.New("Error during write operation")
+	}
 	return nil
 }
 
-func NewAccountManager() *AccountManager {
-	return &AccountManager{
-		accounts: map[string]string{
+func (a *AccountManager) readAccounts() error {
+	a.mutex.Lock()
+	defer a.mutex.Unlock()
+	data, err := os.ReadFile(a.accountFile)
+	if err != nil {
+		a.accounts = map[string]string{
 			"foo": "bar",
-		},
+		}
+		return err
 	}
+	if err := json.Unmarshal(data, &a.accounts); err != nil {
+		return err
+	}
+	return nil
 }
 
-var DefaultAccountManager = NewAccountManager()
+func (a *AccountManager) writeAccounts() error {
+	a.mutex.Lock()
+	defer a.mutex.Unlock()
+	data, err := json.Marshal(a.accounts)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(a.accountFile, data, 0644)
+}
+
+func NewAccountManager(accountFile string) *AccountManager {
+	return &AccountManager{accountFile: accountFile}
+}
+
+var DefaultAccountManager = NewAccountManager("/data/accounts.json")
