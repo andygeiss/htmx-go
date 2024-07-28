@@ -1,4 +1,4 @@
-<form action="/register" method="post">
+<form hx-post="/register">
     <div class="input-form">
         <h1>Register</h1>
         <div class="input-box">
@@ -16,4 +16,9 @@
         </div>
     </div>
 </form>
+{{ if ne .Error "" }}
+<div class="input-error">
+    <h1>{{ .Error }}</h1>
+</div>
+{{ end }}
 <img id="logo" src="/assets/images/logo.svg" />

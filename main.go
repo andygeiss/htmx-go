@@ -15,6 +15,7 @@ func main() {
 	mux.Handle("GET /assets/", http.FileServerFS(efs))
 	mux.HandleFunc("GET /home", handlers.GetHome(efs))
 	mux.HandleFunc("GET /register", handlers.GetRegister(efs))
+	mux.HandleFunc("POST /register", handlers.PostRegister(efs))
 	mux.HandleFunc("GET /sign_in", handlers.GetSignIn(efs))
 	mux.HandleFunc("GET /", handlers.GetIndex(efs))
 	mux.HandleFunc("POST /", handlers.PostIndex(efs))
