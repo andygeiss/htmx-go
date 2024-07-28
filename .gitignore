@@ -4,3 +4,6 @@
 
 # Ignore binaries
 bin
+
+# Ignore accounts
+data/accounts.json

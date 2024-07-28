@@ -82,16 +82,27 @@ body {
     width: 120px;
 }
 
-.input-error {
+.input-error-success {
     align-items: center;
-    color: var(--color-fuchsia);
     display: flex;
     justify-content: center;
     left: 0;
     margin: 0 8px;
     position: absolute;
-    top: 0;
+    top: 32px;
     width: 100%;
+}
+
+.input-error-success h1 {
+    font-size: 140%;
+}
+
+.input-error-success .error {
+    color: var(--color-fuchsia);
+}
+
+.input-error-success .success {
+    color: white;
 }
 
 .input-form {

@@ -26,6 +26,7 @@ func (a *AccountManager) IsUsernamePasswordValid(username, password string) bool
 func (a *AccountManager) RegisterAccount(username, password string) error {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
+	a.readAccounts()
 	if username == "" || password == "" {
 		return errors.New("The username or password cannot be empty")
 	}
@@ -40,14 +41,14 @@ func (a *AccountManager) RegisterAccount(username, password string) error {
 }
 
 func (a *AccountManager) readAccounts() error {
-	a.mutex.Lock()
-	defer a.mutex.Unlock()
 	data, err := os.ReadFile(a.accountFile)
 	if err != nil {
 		a.accounts = map[string]string{
 			"foo": "bar",
 		}
-		return err
+		if err := os.WriteFile(a.accountFile, []byte("{}"), 0644); err != nil {
+			return err
+		}
 	}
 	if err := json.Unmarshal(data, &a.accounts); err != nil {
 		return err
@@ -56,8 +57,6 @@ func (a *AccountManager) readAccounts() error {
 }
 
 func (a *AccountManager) writeAccounts() error {
-	a.mutex.Lock()
-	defer a.mutex.Unlock()
 	data, err := json.Marshal(a.accounts)
 	if err != nil {
 		return err
@@ -69,4 +68,4 @@ func NewAccountManager(accountFile string) *AccountManager {
 	return &AccountManager{accountFile: accountFile}
 }
 
-var DefaultAccountManager = NewAccountManager("/data/accounts.json")
+var DefaultAccountManager = NewAccountManager("data/accounts.json")
