@@ -20,7 +20,9 @@ func (a *AccountManager) IsUsernamePasswordValid(username, password string) bool
 	defer a.mutex.Unlock()
 	a.readAccounts()
 	if hash, exists := a.accounts[username]; exists {
-		_ = bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+		if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
+			return false
+		}
 		return true
 	}
 	return false
