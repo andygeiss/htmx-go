@@ -5,6 +5,8 @@ import (
 	"errors"
 	"os"
 	"sync"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AccountManager struct {
@@ -17,8 +19,9 @@ func (a *AccountManager) IsUsernamePasswordValid(username, password string) bool
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	a.readAccounts()
-	if wanted, exists := a.accounts[username]; exists {
-		return password == wanted
+	if hash, exists := a.accounts[username]; exists {
+		_ = bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+		return true
 	}
 	return false
 }
@@ -33,7 +36,8 @@ func (a *AccountManager) RegisterAccount(username, password string) error {
 	if _, exists := a.accounts[username]; exists {
 		return errors.New("This username is already registered")
 	}
-	a.accounts[username] = password
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+	a.accounts[username] = string(hash)
 	if err := a.writeAccounts(); err != nil {
 		return errors.New("Error during write operation")
 	}
@@ -43,9 +47,7 @@ func (a *AccountManager) RegisterAccount(username, password string) error {
 func (a *AccountManager) readAccounts() error {
 	data, err := os.ReadFile(a.accountFile)
 	if err != nil {
-		a.accounts = map[string]string{
-			"foo": "bar",
-		}
+		a.accounts = map[string]string{}
 		if err := os.WriteFile(a.accountFile, []byte("{}"), 0644); err != nil {
 			return err
 		}
