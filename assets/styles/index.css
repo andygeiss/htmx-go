@@ -17,16 +17,14 @@
     --color-yellow: #fddd00;
     /* Fonts */
     --font-family: "Poppins", sans-serif;
-    /* Margins and Paddings */
-    --margin: 8px;
-    --padding: 8px;
+    --font-size: 14pt;
 }
 
 /* Reset */
 * {
     box-sizing: border-box;
     font-family: var(--font-family);
-    font-size: 14pt;
+    font-size: var(--font-size);
     margin: 0;
     padding: 0;
     text-decoration: none;
@@ -52,8 +50,8 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
     height: 48px;
-    margin: 0 var(--margin);
-    padding: 0 var(--padding);
+    margin: 0 8px;
+    padding: 0 8px;
     width: 100px;
 }
 
@@ -70,8 +68,8 @@ body {
     border-radius: 16px;
     color: var(--color-text);
     height: 48px;
-    margin: 0 var(--margin);
-    padding: 0 var(--padding);
+    margin: 0 8px;
+    padding: 0 8px;
     outline: none;
     width: 240px;
 }
@@ -90,7 +88,7 @@ body {
     display: flex;
     justify-content: center;
     left: 0;
-    margin-top: var(--margin);
+    margin: 0 8px;
     position: absolute;
     top: 0;
     width: 100%;
@@ -99,8 +97,8 @@ body {
 .input-form {
     align-content: center;
     background: var(--color-blue);
+    border: 1px solid var(--color-light-blue);
     border-radius: 16px;
-    box-shadow: 0 0 32px rgba(0, 0, 0, 0.35);
     color: white;
     display: flex;
     flex-flow: column;
@@ -110,7 +108,7 @@ body {
 
 .input-form h1 {
     font-size: 140%;
-    margin-top: var(--margin);
+    margin: 0 8px;
     text-align: center;
 }
 
@@ -119,15 +117,15 @@ body {
     display: flex;
     background: transparent;
     justify-content: center;
-    margin: var(--margin) 0;
-    padding: var(--padding);
+    margin: 8px;
+    padding: 8px;
 }
 
 #forgot {
     align-items: center;
     display: flex;
     justify-content: center;
-    padding: var(--padding);
+    padding: 8px;
     text-align: center;
 }
 
@@ -147,15 +145,15 @@ body {
 }
 
 #register-link {
-    margin-bottom: var(--margin);
-    margin-top: var(--margin);
+    margin-bottom: 8px;
+    margin-top: 8px;
     text-align: center;
 }
 
 #register-link a {
     color: white;
     font-weight: 600;
-    margin-left: var(--margin);
+    margin-left: 8px;
 }
 
 #register-link a:hover {
