@@ -72,4 +72,4 @@ func NewAccountManager(accountFile string) *AccountManager {
 	return &AccountManager{accountFile: accountFile}
 }
 
-var DefaultAccountManager = NewAccountManager("data/accounts.json")
+var DefaultAccountManager = NewAccountManager("/data/accounts.json")
