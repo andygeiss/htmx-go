@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"andygeiss/htmx-go/middleware"
-	"andygeiss/htmx-go/security"
 	"andygeiss/htmx-go/templates"
+	"andygeiss/htmx-go/usecases/accounting"
 	"embed"
 	"log"
 	"net/http"
@@ -21,7 +21,7 @@ func PostRegister(efs embed.FS) http.HandlerFunc {
 		password := r.PostFormValue("password")
 		errorMessage := ""
 		successMessage := "Account successfully created"
-		if err := security.DefaultAccountManager.RegisterAccount(username, password); err != nil {
+		if err := accounting.DefaultAccountManager.RegisterAccount(username, password); err != nil {
 			errorMessage = err.Error()
 			successMessage = ""
 		}

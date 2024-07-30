@@ -1,8 +1,8 @@
-package security_test
+package accounting_test
 
 import (
-	"andygeiss/htmx-go/security"
 	. "andygeiss/htmx-go/testdata"
+	"andygeiss/htmx-go/usecases/accounting"
 	"os"
 	"testing"
 )
@@ -10,19 +10,19 @@ import (
 func TestRegisterAccount(t *testing.T) {
 	path := "../testdata/test_register_account.json"
 	os.WriteFile(path, []byte("{}"), 0644)
-	sut := security.NewAccountManager(path)
+	sut := accounting.NewAccountManager(path)
 	err := sut.RegisterAccount("foo", "bar")
 	err2 := sut.RegisterAccount("foo", "bar2")
 
 	Assert(t, "Error should be nil", err, nil)
 	Assert(t, "Error should not be nil", err2 != nil, true)
-	Assert(t, "Error message should be correct", err2.Error(), security.ErrorAlreadyRegistered)
+	Assert(t, "Error message should be correct", err2.Error(), accounting.ErrorAlreadyRegistered)
 }
 
 func TestIsUsernamePasswordValid(t *testing.T) {
 	path := "../testdata/test_is_username_password_valid.json"
 	os.WriteFile(path, []byte("{}"), 0644)
-	sut := security.NewAccountManager(path)
+	sut := accounting.NewAccountManager(path)
 	_ = sut.RegisterAccount("foo", "bar")
 
 	Assert(t, "Password should be valid", sut.IsUsernamePasswordValid("foo", "bar"), true)
