@@ -20,7 +20,8 @@ func main() {
 		AccountingManager:     accounting.NewDefaultManager("/data/accounts.json"),
 		AuthenticationManager: authentication.NewDefaultManager(),
 		Efs:                   efs,
-		Excluded:              []string{"/", "/register", "/sign_in"},
+		/* The following resources does not require authentication. */
+		Excluded: []string{"/", "/register", "/sign_in"},
 	}
 	mux := http.NewServeMux()
 	mux.Handle("GET /assets/", http.FileServerFS(&cfg.Efs))
