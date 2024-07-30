@@ -9,18 +9,29 @@ import (
 	"sync"
 )
 
-type TokenManager struct {
+type Manager interface {
+	GenerateToken(username string) string
+	IsValidToken(token string) bool
+}
+
+type DefaultManager struct {
 	salt  []byte
 	mutex sync.Mutex
 }
 
-func (a *TokenManager) Generate(username string) string {
+func (a *DefaultManager) GenerateToken(username string) string {
 	prefix := base64.RawStdEncoding.EncodeToString([]byte(username))
 	suffix := base64.RawStdEncoding.EncodeToString(a.hash(username))
 	return fmt.Sprintf("%s.%s", prefix, suffix)
 }
 
-func (a *TokenManager) hash(username string) []byte {
+func (a *DefaultManager) IsValidToken(token string) bool {
+	parts := strings.Split(token, ".")
+	username, _ := base64.RawStdEncoding.DecodeString(parts[0])
+	return token == a.GenerateToken(string(username))
+}
+
+func (a *DefaultManager) hash(username string) []byte {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	hash := sha256.New()
@@ -28,18 +39,10 @@ func (a *TokenManager) hash(username string) []byte {
 	return hash.Sum(nil)
 }
 
-func (a *TokenManager) IsValid(token string) bool {
-	parts := strings.Split(token, ".")
-	username, _ := base64.RawStdEncoding.DecodeString(parts[0])
-	return token == a.Generate(string(username))
-}
-
-func NewTokenManager() *TokenManager {
+func NewDefaultManager() *DefaultManager {
 	salt := make([]byte, 16)
 	_, _ = rand.Read(salt)
-	return &TokenManager{
+	return &DefaultManager{
 		salt: salt,
 	}
 }
-
-var DefaultTokenManager = NewTokenManager()

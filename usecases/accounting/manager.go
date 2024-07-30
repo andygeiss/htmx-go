@@ -15,13 +15,18 @@ const (
 	ErrorWrite             = "Error during write operation"
 )
 
-type AccountManager struct {
+type Manager interface {
+	IsUsernamePasswordValid(username, password string) bool
+	RegisterAccount(username, password string) error
+}
+
+type DefaultManager struct {
 	accounts     map[string]string
 	accountsFile string
 	mutex        sync.Mutex
 }
 
-func (a *AccountManager) IsUsernamePasswordValid(username, password string) bool {
+func (a *DefaultManager) IsUsernamePasswordValid(username, password string) bool {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	a.readAccounts()
@@ -34,7 +39,7 @@ func (a *AccountManager) IsUsernamePasswordValid(username, password string) bool
 	return false
 }
 
-func (a *AccountManager) RegisterAccount(username, password string) error {
+func (a *DefaultManager) RegisterAccount(username, password string) error {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	a.readAccounts()
@@ -52,7 +57,7 @@ func (a *AccountManager) RegisterAccount(username, password string) error {
 	return nil
 }
 
-func (a *AccountManager) readAccounts() error {
+func (a *DefaultManager) readAccounts() error {
 	data, err := os.ReadFile(a.accountsFile)
 	if err != nil {
 		a.accounts = map[string]string{}
@@ -66,7 +71,7 @@ func (a *AccountManager) readAccounts() error {
 	return nil
 }
 
-func (a *AccountManager) writeAccounts() error {
+func (a *DefaultManager) writeAccounts() error {
 	data, err := json.Marshal(a.accounts)
 	if err != nil {
 		return err
@@ -74,8 +79,6 @@ func (a *AccountManager) writeAccounts() error {
 	return os.WriteFile(a.accountsFile, data, 0644)
 }
 
-func NewAccountManager(accountFile string) *AccountManager {
-	return &AccountManager{accountsFile: accountFile}
+func NewDefaultManager(accountFile string) *DefaultManager {
+	return &DefaultManager{accountsFile: accountFile}
 }
-
-var DefaultAccountManager = NewAccountManager("/data/accounts.json")

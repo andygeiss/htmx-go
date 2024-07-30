@@ -9,7 +9,7 @@ import (
 func TestRegisterAccount(t *testing.T) {
 	path := "testdata/test_register_account.json"
 	os.WriteFile(path, []byte("{}"), 0644)
-	sut := accounting.NewAccountManager(path)
+	sut := accounting.NewDefaultManager(path)
 
 	if err := sut.RegisterAccount("foo", "bar"); err != nil {
 		t.Error("Error should be nil")
@@ -26,7 +26,7 @@ func TestRegisterAccount(t *testing.T) {
 func TestIsUsernamePasswordValid(t *testing.T) {
 	path := "testdata/test_is_username_password_valid.json"
 	os.WriteFile(path, []byte("{}"), 0644)
-	sut := accounting.NewAccountManager(path)
+	sut := accounting.NewDefaultManager(path)
 
 	if err := sut.RegisterAccount("foo", "bar"); err != nil {
 		t.Error("Error should be nil")

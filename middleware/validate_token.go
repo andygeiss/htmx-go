@@ -1,15 +1,15 @@
 package middleware
 
 import (
-	"andygeiss/htmx-go/usecases/authentication"
+	"andygeiss/htmx-go/integration"
 	"net/http"
 	"strings"
 )
 
-func ValidateToken(excluded []string, next http.HandlerFunc) http.HandlerFunc {
+func ValidateToken(cfg *integration.Config, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Return early if request URI is excluded.
-		for _, uri := range excluded {
+		for _, uri := range cfg.Excluded {
 			if r.RequestURI == uri {
 				next.ServeHTTP(w, r)
 				return
@@ -23,7 +23,7 @@ func ValidateToken(excluded []string, next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		token := parts[1]
-		if !authentication.DefaultTokenManager.IsValid(token) {
+		if !cfg.AuthenticationManager.IsValidToken(token) {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}

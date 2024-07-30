@@ -6,21 +6,21 @@ import (
 )
 
 func TestGenerate(t *testing.T) {
-	sut := authentication.DefaultTokenManager
+	sut := authentication.NewDefaultManager()
 
-	if token := sut.Generate("foo"); len(token) != 48 {
+	if token := sut.GenerateToken("foo"); len(token) != 48 {
 		t.Errorf("Token length should be 48, but is %d", len(token))
 	}
 }
 
 func TestIsValid(t *testing.T) {
-	sut := authentication.NewTokenManager()
+	sut := authentication.NewDefaultManager()
 
-	if token := sut.Generate("foo"); !sut.IsValid(token) {
+	if token := sut.GenerateToken("foo"); !sut.IsValidToken(token) {
 		t.Error("Token should be valid")
 	}
 
-	if sut.IsValid("some data") {
+	if sut.IsValidToken("some data") {
 		t.Error("Token should be invalid")
 	}
 }
