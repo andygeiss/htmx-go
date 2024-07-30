@@ -8,6 +8,8 @@ import (
 	"embed"
 	"log"
 	"net/http"
+	"net/http/pprof"
+	_ "net/http/pprof"
 )
 
 //go:embed assets/**
@@ -27,6 +29,12 @@ func main() {
 	mux.HandleFunc("GET /sign_in", handlers.GetSignIn(&cfg))
 	mux.HandleFunc("GET /", handlers.GetIndex(&cfg))
 	mux.HandleFunc("POST /", handlers.PostIndex(&cfg))
+	/* Add profiling to use Profile-guided optimization */
+	mux.HandleFunc("GET /debug/pprof/", pprof.Index)
+	mux.HandleFunc("GET /debug/pprof/cmdline", pprof.Cmdline)
+	mux.HandleFunc("GET /debug/pprof/profile", pprof.Profile)
+	mux.HandleFunc("GET /debug/pprof/symbol", pprof.Symbol)
+	log.Printf("Start listening ...")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Printf("Error: %s\n", err.Error())
 	}
