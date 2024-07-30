@@ -9,10 +9,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const (
+	ErrorCannotBeEmpty     = "Username or password cannot be empty"
+	ErrorAlreadyRegistered = "Username is already registered"
+	ErrorWrite             = "Error during write operation"
+)
+
 type AccountManager struct {
-	accounts    map[string]string
-	accountFile string
-	mutex       sync.Mutex
+	accounts     map[string]string
+	accountsFile string
+	mutex        sync.Mutex
 }
 
 func (a *AccountManager) IsUsernamePasswordValid(username, password string) bool {
@@ -33,24 +39,24 @@ func (a *AccountManager) RegisterAccount(username, password string) error {
 	defer a.mutex.Unlock()
 	a.readAccounts()
 	if username == "" || password == "" {
-		return errors.New("The username or password cannot be empty")
+		return errors.New(ErrorCannotBeEmpty)
 	}
 	if _, exists := a.accounts[username]; exists {
-		return errors.New("This username is already registered")
+		return errors.New(ErrorAlreadyRegistered)
 	}
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	a.accounts[username] = string(hash)
 	if err := a.writeAccounts(); err != nil {
-		return errors.New("Error during write operation")
+		return errors.New(ErrorWrite)
 	}
 	return nil
 }
 
 func (a *AccountManager) readAccounts() error {
-	data, err := os.ReadFile(a.accountFile)
+	data, err := os.ReadFile(a.accountsFile)
 	if err != nil {
 		a.accounts = map[string]string{}
-		if err := os.WriteFile(a.accountFile, []byte("{}"), 0644); err != nil {
+		if err := os.WriteFile(a.accountsFile, []byte("{}"), 0644); err != nil {
 			return err
 		}
 	}
@@ -65,11 +71,11 @@ func (a *AccountManager) writeAccounts() error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(a.accountFile, data, 0644)
+	return os.WriteFile(a.accountsFile, data, 0644)
 }
 
 func NewAccountManager(accountFile string) *AccountManager {
-	return &AccountManager{accountFile: accountFile}
+	return &AccountManager{accountsFile: accountFile}
 }
 
 var DefaultAccountManager = NewAccountManager("/data/accounts.json")
