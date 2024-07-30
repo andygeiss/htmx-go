@@ -4,6 +4,7 @@ import (
 	"andygeiss/htmx-go/middleware"
 	"andygeiss/htmx-go/templates"
 	"andygeiss/htmx-go/usecases/accounting"
+	"andygeiss/htmx-go/usecases/authentication"
 	"embed"
 	"log"
 	"net/http"
@@ -20,7 +21,7 @@ func PostIndex(efs embed.FS) http.HandlerFunc {
 		password := r.PostFormValue("password")
 		token := ""
 		if accounting.DefaultAccountManager.IsUsernamePasswordValid(username, password) {
-			token = security.DefaultTokenManager.Generate(username)
+			token = authentication.DefaultTokenManager.Generate(username)
 		}
 		te.Execute(w, postIndexData{Token: token})
 		if te.Error() != nil {

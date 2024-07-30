@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"andygeiss/htmx-go/security"
+	"andygeiss/htmx-go/usecases/authentication"
 	"net/http"
 	"strings"
 )
@@ -23,7 +23,7 @@ func ValidateToken(excluded []string, next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		token := parts[1]
-		if !security.DefaultTokenManager.IsValid(token) {
+		if !authentication.DefaultTokenManager.IsValid(token) {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
