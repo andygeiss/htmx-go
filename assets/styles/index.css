@@ -41,7 +41,7 @@ body {
     background: var(--background);
     display: flex;
     justify-content: center;
-    min-height: 100vh;
+    min-height: 100svh;
 }
 
 .input-box button {
