@@ -26,13 +26,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("GET /assets/", http.FileServerFS(&cfg.Efs))
 	/* Add basic accounting and authentication */
-	mux.HandleFunc("GET /change_password", handlers.GetChangePassword(&cfg))
-	mux.HandleFunc("POST /change_password", handlers.PostChangePassword(&cfg))
 	mux.HandleFunc("GET /home", handlers.GetHome(&cfg))
-	mux.HandleFunc("GET /register", handlers.GetRegister(&cfg))
-	mux.HandleFunc("POST /register", handlers.PostRegister(&cfg))
-	mux.HandleFunc("GET /reset", handlers.GetReset(&cfg))
-	mux.HandleFunc("POST /reset", handlers.PostReset(&cfg))
 	mux.HandleFunc("GET /sign_in", handlers.GetSignIn(&cfg))
 	mux.HandleFunc("GET /", handlers.GetIndex(&cfg))
 	mux.HandleFunc("POST /", handlers.PostIndex(&cfg))

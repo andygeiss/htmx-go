@@ -9,13 +9,14 @@ import (
 )
 
 type getIndexData struct {
-	Token string
+	ErrorMessage string
+	Token        string
 }
 
 func GetIndex(cfg *integration.Config) http.HandlerFunc {
 	te := templates.NewExecutor(cfg.Efs, "assets").Parse("index.html")
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
-		te.Execute(w, getIndexData{Token: ""})
+		te.Execute(w, getIndexData{ErrorMessage: "", Token: ""})
 		if te.Error() != nil {
 			log.Println(te.Error())
 		}

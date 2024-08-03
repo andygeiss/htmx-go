@@ -18,7 +18,13 @@
         <title>Golang template</title>
     </head>
     {{ if eq .Token "" }}
-    <body hx-get="/sign_in" hx-trigger="load"></body>
+    <body hx-get="/sign_in" hx-trigger="load delay:2s">
+        <div class="input-error-success">
+            {{ if ne .ErrorMessage "" }}
+            <h1 class="error">{{ .ErrorMessage }}</h1>
+            {{ end }}
+        </div>
+    </body>
     {{ else }}
     <body
         hx-headers='{"Authorization": "Bearer {{ .Token }}"}'
