@@ -1,4 +1,4 @@
-<form hx-post="/register">
+<form hx-post="/reset">
     {{ if ne .Error "" }}
     <div class="input-error-success">
         <h1 class="error">{{ .Error }}</h1>
@@ -9,19 +9,14 @@
     </div>
     {{ end }}
     <div class="input-form">
-        <h1>Register your account</h1>
+        <h1>Reset your password</h1>
         <div class="input-box">
             <label for="email"> Email </label>
             <input type="text" id="email" name="email" />
             <i class="bx bxs-user"></i>
         </div>
         <div class="input-box">
-            <label for="password"> Password </label>
-            <input type="password" name="password" />
-            <i class="bx bxs-lock-alt"></i>
-        </div>
-        <div class="input-box">
-            <button>Register</button>
+            <button>Reset</button>
         </div>
     </div>
 </form>

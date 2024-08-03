@@ -10,14 +10,16 @@ import (
 )
 
 const (
-	ErrorCannotBeEmpty     = "Username or password cannot be empty"
-	ErrorAlreadyRegistered = "Username is already registered"
+	ErrorAlreadyRegistered = "Email is already registered"
+	ErrorCannotBeEmpty     = "Email or password cannot be empty"
+	ErrorNotRegistered     = "Email is not registered"
 	ErrorWrite             = "Error during write operation"
 )
 
 type Manager interface {
-	IsUsernamePasswordValid(username, password string) bool
-	RegisterAccount(username, password string) error
+	ChangePassword(email, password string) error
+	IsEmailPasswordValid(email, password string) bool
+	RegisterAccount(email, password string) error
 }
 
 type DefaultManager struct {
@@ -26,11 +28,26 @@ type DefaultManager struct {
 	mutex        sync.Mutex
 }
 
-func (a *DefaultManager) IsUsernamePasswordValid(username, password string) bool {
+func (a *DefaultManager) ChangePassword(email, password string) error {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	a.readAccounts()
-	if hash, exists := a.accounts[username]; exists {
+	if _, exists := a.accounts[email]; !exists {
+		return errors.New(ErrorNotRegistered)
+	}
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+	a.accounts[email] = string(hash)
+	if err := a.writeAccounts(); err != nil {
+		return errors.New(ErrorWrite)
+	}
+	return nil
+}
+
+func (a *DefaultManager) IsEmailPasswordValid(email, password string) bool {
+	a.mutex.Lock()
+	defer a.mutex.Unlock()
+	a.readAccounts()
+	if hash, exists := a.accounts[email]; exists {
 		if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
 			return false
 		}
@@ -39,18 +56,18 @@ func (a *DefaultManager) IsUsernamePasswordValid(username, password string) bool
 	return false
 }
 
-func (a *DefaultManager) RegisterAccount(username, password string) error {
+func (a *DefaultManager) RegisterAccount(email, password string) error {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	a.readAccounts()
-	if username == "" || password == "" {
+	if email == "" || password == "" {
 		return errors.New(ErrorCannotBeEmpty)
 	}
-	if _, exists := a.accounts[username]; exists {
+	if _, exists := a.accounts[email]; exists {
 		return errors.New(ErrorAlreadyRegistered)
 	}
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-	a.accounts[username] = string(hash)
+	a.accounts[email] = string(hash)
 	if err := a.writeAccounts(); err != nil {
 		return errors.New(ErrorWrite)
 	}

@@ -8,23 +8,23 @@ import (
 	"net/http"
 )
 
-type postRegisterData struct {
+type postChangePasswordData struct {
 	Error   string
 	Success string
 }
 
-func PostRegister(cfg *integration.Config) http.HandlerFunc {
-	te := templates.NewExecutor(cfg.Efs, "assets").Parse("register.html")
+func PostChangePassword(cfg *integration.Config) http.HandlerFunc {
+	te := templates.NewExecutor(cfg.Efs, "assets").Parse("reset.html")
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
 		email := r.PostFormValue("email")
 		password := r.PostFormValue("password")
 		errorMessage := ""
-		successMessage := "Account successfully created"
-		if err := cfg.AccountingManager.RegisterAccount(email, password); err != nil {
+		successMessage := "Password successfully changed"
+		if err := cfg.AccountingManager.ChangePassword(email, password); err != nil {
 			errorMessage = err.Error()
 			successMessage = ""
 		}
-		te.Execute(w, postRegisterData{Error: errorMessage, Success: successMessage})
+		te.Execute(w, postChangePasswordData{Error: errorMessage, Success: successMessage})
 		if te.Error() != nil {
 			log.Println(te.Error())
 		}
