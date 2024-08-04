@@ -2,6 +2,7 @@ package main
 
 import (
 	"andygeiss/htmx-go/handlers"
+	"andygeiss/htmx-go/handlers/api/account"
 	"andygeiss/htmx-go/integration"
 	"andygeiss/htmx-go/usecases/accounting"
 	"andygeiss/htmx-go/usecases/authentication"
@@ -21,10 +22,12 @@ func main() {
 		AuthenticationManager: authentication.NewDefaultManager(),
 		Efs:                   efs,
 		/* The following resources does not require authentication. */
-		Excluded: []string{"/", "/index.html", "/sign_in.html"},
+		Excluded: []string{"/", "/index.html", "/sign_in.html", "/api/v1/account"},
 	}
 	mux := http.NewServeMux()
 	mux.Handle("GET /assets/", http.FileServerFS(&cfg.Efs))
+	/* Add API resources */
+	mux.HandleFunc("POST /api/v1/account", account.Register(&cfg))
 	/* Add basic accounting and authentication */
 	mux.HandleFunc("GET /", handlers.GetIndex(&cfg))
 	mux.HandleFunc("GET /home.html", handlers.GetHome(&cfg))
