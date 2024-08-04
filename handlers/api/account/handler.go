@@ -8,20 +8,20 @@ import (
 )
 
 type registerData struct {
-	ErrorMessage string `json:"error,omitempty"`
-	Success      bool   `json:"success,omitempty"`
+	Message string `json:"message,omitempty"`
+	Status  int    `json:"status,omitempty"`
 }
 
 func Register(cfg *integration.Config) http.HandlerFunc {
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
 		email := r.PostFormValue("email")
 		password := r.PostFormValue("password")
-		errorMessage := ""
-		success := true
 		if err := cfg.AccountingManager.RegisterAccount(email, password); err != nil {
-			errorMessage = err.Error()
-			success = false
+			data := &registerData{Message: err.Error(), Status: http.StatusInternalServerError}
+			response, _ := json.Marshal(data)
+			http.Error(w, string(response), http.StatusInternalServerError)
+			return
 		}
-		json.NewEncoder(w).Encode(&registerData{ErrorMessage: errorMessage, Success: success})
+		json.NewEncoder(w).Encode(&registerData{Message: "User successfully registered", Status: http.StatusOK})
 	})
 }
