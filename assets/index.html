@@ -18,7 +18,7 @@
         <title>Golang template</title>
     </head>
     {{ if eq .Token "" }}
-    <body hx-get="/sign_in" hx-trigger="load delay:2s">
+    <body hx-get="/sign_in.html" hx-trigger="load delay:2s">
         <div class="input-error-success">
             {{ if ne .ErrorMessage "" }}
             <h1 class="error">{{ .ErrorMessage }}</h1>
@@ -28,7 +28,7 @@
     {{ else }}
     <body
         hx-headers='{"Authorization": "Bearer {{ .Token }}"}'
-        hx-get="/home"
+        hx-get="/home.html"
         hx-trigger="load"
     ></body>
     {{ end }}
