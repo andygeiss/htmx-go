@@ -6,8 +6,8 @@ import (
 	"testing"
 )
 
-func TestChangePassword(t *testing.T) {
-	path := "testdata/test_change_password.json"
+func TestDefaultManagerChangePassword(t *testing.T) {
+	path := "testdata/test_default_manager_change_password.json"
 	os.WriteFile(path, []byte("{}"), 0644)
 	sut := accounting.NewDefaultManager(path)
 	sut.RegisterAccount("foo", "bar")
@@ -16,8 +16,8 @@ func TestChangePassword(t *testing.T) {
 	}
 }
 
-func TestIsEmailPasswordValid(t *testing.T) {
-	path := "testdata/test_is_email_password_valid.json"
+func TestDefaultManagerIsEmailPasswordValid(t *testing.T) {
+	path := "testdata/test_default_manager_is_email_password_valid.json"
 	os.WriteFile(path, []byte("{}"), 0644)
 	sut := accounting.NewDefaultManager(path)
 	if err := sut.RegisterAccount("foo", "bar"); err != nil {
@@ -31,8 +31,8 @@ func TestIsEmailPasswordValid(t *testing.T) {
 	}
 }
 
-func TestRegisterAccount(t *testing.T) {
-	path := "testdata/test_register_account.json"
+func TestDefaultManagerRegisterAccount(t *testing.T) {
+	path := "testdata/test_default_manager_register_account.json"
 	os.WriteFile(path, []byte("{}"), 0644)
 	sut := accounting.NewDefaultManager(path)
 	if err := sut.RegisterAccount("foo", "bar"); err != nil {
