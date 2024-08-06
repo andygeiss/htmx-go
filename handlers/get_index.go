@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-type getIndexData struct {
+type getIndexResponse struct {
 	ErrorMessage string
 	Token        string
 }
@@ -16,7 +16,7 @@ type getIndexData struct {
 func GetIndex(cfg *integration.Config) http.HandlerFunc {
 	te := templates.NewExecutor(cfg.Efs, "assets").Parse("index.html")
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
-		te.Execute(w, getIndexData{ErrorMessage: "", Token: ""})
+		te.Execute(w, getIndexResponse{ErrorMessage: "", Token: ""})
 		if te.Error() != nil {
 			log.Println(te.Error())
 		}

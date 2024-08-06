@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type registerData struct {
+type registerResponse struct {
 	Message string `json:"message,omitempty"`
 	Status  int    `json:"status,omitempty"`
 }
@@ -17,11 +17,11 @@ func Register(cfg *integration.Config) http.HandlerFunc {
 		email := r.PostFormValue("email")
 		password := r.PostFormValue("password")
 		if err := cfg.AccountingManager.RegisterAccount(email, password); err != nil {
-			data := &registerData{Message: err.Error(), Status: http.StatusInternalServerError}
+			data := &registerResponse{Message: err.Error(), Status: http.StatusInternalServerError}
 			response, _ := json.Marshal(data)
 			http.Error(w, string(response), http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(&registerData{Message: "User successfully registered", Status: http.StatusOK})
+		json.NewEncoder(w).Encode(&registerResponse{Message: "User successfully registered", Status: http.StatusOK})
 	})
 }

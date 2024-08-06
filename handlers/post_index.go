@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-type postIndexData struct {
+type postIndexResponse struct {
 	ErrorMessage string
 	Token        string
 }
@@ -25,7 +25,7 @@ func PostIndex(cfg *integration.Config) http.HandlerFunc {
 		} else {
 			errorMessage = "Incorrect email or password"
 		}
-		te.Execute(w, postIndexData{ErrorMessage: errorMessage, Token: token})
+		te.Execute(w, postIndexResponse{ErrorMessage: errorMessage, Token: token})
 		if te.Error() != nil {
 			log.Println(te.Error())
 		}
