@@ -21,7 +21,9 @@ jobs:
         run: go test -v ./...
 
       - name: Create coverprofile
-        run: go test -coverprofile=unit.coverage.out ./...
+        run: go test -coverprofile=unit.coverage.out ./... ; \
+          grep -v "main.go" unit.coverage.out > exclude.main ; \
+          mv exclude.main unit.coverage.out
 
       - name: Get Codacy script
         run: curl -o get.sh -Ls https://coverage.codacy.com/get.sh
