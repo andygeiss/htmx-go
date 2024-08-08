@@ -12,7 +12,7 @@ import (
 
 func TestPostIndex(t *testing.T) {
 	// Arrange
-	data := []byte("email=texst&password=test")
+	data := []byte("email=test&password=test")
 	r := httptest.NewRequest(http.MethodPost, "/index", bytes.NewReader(data))
 	w := httptest.NewRecorder()
 	cfg, token := setup()
