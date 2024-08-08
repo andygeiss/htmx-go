@@ -40,7 +40,7 @@ func TestDefaultManagerRegisterAccount(t *testing.T) {
 	}
 	if err := sut.RegisterAccount("foo", "bar2"); err == nil {
 		t.Error("Error should not be nil")
-		if err.Error() != accounting.ErrorAlreadyRegistered {
+		if err != accounting.ErrorAlreadyRegistered {
 			t.Error("Error message should be correct")
 		}
 	}

@@ -1,10 +1,12 @@
 package accounting
 
-const (
-	ErrorAlreadyRegistered = "Email is already registered"
-	ErrorCannotBeEmpty     = "Email or password cannot be empty"
-	ErrorNotRegistered     = "Email is not registered"
-	ErrorWrite             = "Error during write operation"
+import "errors"
+
+var (
+	ErrorAlreadyRegistered = errors.New("Email is already registered")
+	ErrorCannotBeEmpty     = errors.New("Email or password cannot be empty")
+	ErrorNotRegistered     = errors.New("Email is not registered")
+	ErrorWrite             = errors.New("Error during write operation")
 )
 
 type Manager interface {

@@ -2,7 +2,6 @@ package accounting
 
 import (
 	"encoding/json"
-	"errors"
 	"os"
 	"sync"
 
@@ -20,12 +19,12 @@ func (a *defaultManager) ChangePassword(email, password string) error {
 	defer a.mutex.Unlock()
 	a.readAccounts()
 	if _, exists := a.accounts[email]; !exists {
-		return errors.New(ErrorNotRegistered)
+		return ErrorNotRegistered
 	}
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	a.accounts[email] = string(hash)
 	if err := a.writeAccounts(); err != nil {
-		return errors.New(ErrorWrite)
+		return ErrorWrite
 	}
 	return nil
 }
@@ -48,15 +47,15 @@ func (a *defaultManager) RegisterAccount(email, password string) error {
 	defer a.mutex.Unlock()
 	a.readAccounts()
 	if email == "" || password == "" {
-		return errors.New(ErrorCannotBeEmpty)
+		return ErrorCannotBeEmpty
 	}
 	if _, exists := a.accounts[email]; exists {
-		return errors.New(ErrorAlreadyRegistered)
+		return ErrorAlreadyRegistered
 	}
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
 	a.accounts[email] = string(hash)
 	if err := a.writeAccounts(); err != nil {
-		return errors.New(ErrorWrite)
+		return ErrorWrite
 	}
 	return nil
 }
