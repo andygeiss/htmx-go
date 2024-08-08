@@ -9,7 +9,7 @@ import (
 func ValidateToken(cfg *integration.Config, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Return early if request URI is excluded.
-		for _, uri := range cfg.Excluded {
+		for _, uri := range cfg.ExcludedResources {
 			if r.RequestURI == uri {
 				next.ServeHTTP(w, r)
 				return

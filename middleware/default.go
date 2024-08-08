@@ -5,10 +5,6 @@ import (
 	"net/http"
 )
 
-var excluded = []string{
-	"/", "/register", "/sign_in",
-}
-
 func Default(cfg *integration.Config, next http.HandlerFunc) http.HandlerFunc {
 	next = LogRequest(next)
 	next = ValidateToken(cfg, next)

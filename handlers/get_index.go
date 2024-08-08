@@ -14,7 +14,7 @@ type getIndexResponse struct {
 }
 
 func GetIndex(cfg *integration.Config) http.HandlerFunc {
-	te := templates.NewExecutor(cfg.Efs, "assets").Parse("index.html")
+	te := templates.NewExecutor(cfg.Efs, cfg.AssetsPath).Parse("index.html")
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
 		te.Execute(w, getIndexResponse{ErrorMessage: "", Token: ""})
 		if te.Error() != nil {

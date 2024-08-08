@@ -19,10 +19,10 @@ var efs embed.FS
 func main() {
 	cfg := integration.Config{
 		AccountingManager:     accounting.NewDefaultManager("/data/accounts.json"),
+		AssetsPath:            "assets",
 		AuthenticationManager: authentication.NewDefaultManager(),
 		Efs:                   efs,
-		/* The following resources does not require authentication. */
-		Excluded: []string{"/", "/index.html", "/sign_in.html", "/api/v1/account"},
+		ExcludedResources:     []string{"/", "/index.html", "/sign_in.html", "/api/v1/account"},
 	}
 	mux := http.NewServeMux()
 	mux.Handle("GET /assets/", http.FileServerFS(&cfg.Efs))

@@ -9,7 +9,7 @@ import (
 )
 
 func GetHome(cfg *integration.Config) http.HandlerFunc {
-	te := templates.NewExecutor(cfg.Efs, "assets").Parse("home.html")
+	te := templates.NewExecutor(cfg.Efs, cfg.AssetsPath).Parse("home.html")
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
 		te.Execute(w, nil)
 		if te.Error() != nil {

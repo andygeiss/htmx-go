@@ -8,7 +8,8 @@ import (
 
 type Config struct {
 	AccountingManager     accounting.Manager
+	AssetsPath            string
 	AuthenticationManager authentication.Manager
 	Efs                   embed.FS
-	Excluded              []string // List of unsecure resources
+	ExcludedResources     []string // This resources does not require authentication.
 }

@@ -14,7 +14,7 @@ type postIndexResponse struct {
 }
 
 func PostIndex(cfg *integration.Config) http.HandlerFunc {
-	te := templates.NewExecutor(cfg.Efs, "assets").Parse("index.html")
+	te := templates.NewExecutor(cfg.Efs, cfg.AssetsPath).Parse("index.html")
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
 		email := r.PostFormValue("email")
 		password := r.PostFormValue("password")
