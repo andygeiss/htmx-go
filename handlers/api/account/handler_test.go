@@ -53,13 +53,13 @@ func TestRegisterSuccess(t *testing.T) {
 	var response registerResponse
 	err := json.Unmarshal(body, &response)
 	if err != nil {
-		t.Errorf("Error should be nil, but got [%s]", err.Error())
+		t.Errorf("error should be nil, but got [%s]", err.Error())
 	}
 	if res.StatusCode != http.StatusOK {
-		t.Errorf("Status should be ok, but got [%s]", res.Status)
+		t.Errorf("status should be ok, but got [%s]", res.Status)
 	}
-	if response.Message != "User successfully registered" {
-		t.Errorf("Data should be correct, but got [%s]", response.Message)
+	if response.Message != "user successfully registered" {
+		t.Errorf("data should be correct, but got [%s]", response.Message)
 	}
 }
 
@@ -79,12 +79,12 @@ func TestRegisterErrorAlreadyRegistered(t *testing.T) {
 	var response registerResponse
 	err := json.Unmarshal(body, &response)
 	if err != nil {
-		t.Errorf("Error should be nil, but got [%s]", err.Error())
+		t.Errorf("error should be nil, but got [%s]", err.Error())
 	}
 	if res.StatusCode != http.StatusInternalServerError {
-		t.Errorf("Status should be ok, but got [%s]", res.Status)
+		t.Errorf("status should be ok, but got [%s]", res.Status)
 	}
-	if response.Message != "Email is already registered" {
-		t.Errorf("Data should be correct, but got [%s]", response.Message)
+	if response.Message != "email is already registered" {
+		t.Errorf("data should be correct, but got [%s]", response.Message)
 	}
 }

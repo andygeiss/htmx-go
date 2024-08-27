@@ -23,7 +23,7 @@ func PostIndex(cfg *integration.Config) http.HandlerFunc {
 		if cfg.AccountingManager.IsEmailPasswordValid(email, password) {
 			token = cfg.AuthenticationManager.GenerateToken(email)
 		} else {
-			errorMessage = "Incorrect email or password"
+			errorMessage = "incorrect email or password"
 		}
 		te.Execute(w, postIndexResponse{ErrorMessage: errorMessage, Token: token})
 		if te.Error() != nil {

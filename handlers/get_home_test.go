@@ -22,12 +22,12 @@ func TestGetHome(t *testing.T) {
 	defer res.Body.Close()
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		t.Errorf("Error should be nil, but got [%s]", err.Error())
+		t.Errorf("error should be nil, but got [%s]", err.Error())
 	}
 	if res.StatusCode != http.StatusOK {
-		t.Errorf("Status should be ok, but got [%s]", res.Status)
+		t.Errorf("status should be ok, but got [%s]", res.Status)
 	}
 	if string(data) != "home\n" {
-		t.Errorf("Data should be correct, but got [%s]", string(data))
+		t.Errorf("data should be correct, but got [%s]", string(data))
 	}
 }

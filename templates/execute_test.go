@@ -16,9 +16,9 @@ func TestExecute(t *testing.T) {
 	te.Execute(out, struct{ Name string }{Name: "Foo"})
 	result := string(out.Bytes())
 	if te.Error() != nil {
-		t.Errorf("Error should be nil, but got %v", te.Error())
+		t.Errorf("error should be nil, but got %v", te.Error())
 	}
 	if result != "Hello Foo\n" {
-		t.Errorf("Result should be correct, but got [%s]", result)
+		t.Errorf("result should be correct, but got [%s]", result)
 	}
 }

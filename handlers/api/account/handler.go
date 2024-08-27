@@ -22,6 +22,6 @@ func Register(cfg *integration.Config) http.HandlerFunc {
 			http.Error(w, string(response), http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(&registerResponse{Message: "User successfully registered", Status: http.StatusOK})
+		json.NewEncoder(w).Encode(&registerResponse{Message: "user successfully registered", Status: http.StatusOK})
 	})
 }

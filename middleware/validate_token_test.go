@@ -32,13 +32,13 @@ func TestValidateTokenSuccess(t *testing.T) {
 	defer res.Body.Close()
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		t.Errorf("Error should be nil, but got [%s]", err.Error())
+		t.Errorf("error should be nil, but got [%s]", err.Error())
 	}
 	if res.StatusCode != http.StatusOK {
-		t.Errorf("Status should be ok, but got [%s]", res.Status)
+		t.Errorf("status should be ok, but got [%s]", res.Status)
 	}
 	if len(data) != 6 {
-		t.Errorf("Data length should be correct, but got [%d]", len(data))
+		t.Errorf("data length should be correct, but got [%d]", len(data))
 	}
 }
 
@@ -54,12 +54,12 @@ func TestValidateTokenError(t *testing.T) {
 	defer res.Body.Close()
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		t.Errorf("Error should be nil, but got [%s]", err.Error())
+		t.Errorf("error should be nil, but got [%s]", err.Error())
 	}
 	if res.StatusCode != http.StatusForbidden {
-		t.Errorf("Status should be ok, but got [%s]", res.Status)
+		t.Errorf("status should be ok, but got [%s]", res.Status)
 	}
 	if len(data) != 0 {
-		t.Errorf("Data length should be correct, but got [%d]", len(data))
+		t.Errorf("data length should be correct, but got [%d]", len(data))
 	}
 }

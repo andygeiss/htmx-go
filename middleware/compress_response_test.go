@@ -26,15 +26,15 @@ func TestCompressResponse(t *testing.T) {
 	defer res.Body.Close()
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		t.Errorf("Error should be nil, but got [%s]", err.Error())
+		t.Errorf("error should be nil, but got [%s]", err.Error())
 	}
 	if res.StatusCode != http.StatusOK {
-		t.Errorf("Status should be ok, but got [%s]", res.Status)
+		t.Errorf("status should be ok, but got [%s]", res.Status)
 	}
 	if res.Header.Get("Content-Encoding") != "gzip" {
-		t.Error("Content-Encoding should be gzip")
+		t.Error("content-encoding should be gzip")
 	}
 	if len(data) != 34 {
-		t.Errorf("Data length should be correct, but got [%d]", len(data))
+		t.Errorf("data length should be correct, but got [%d]", len(data))
 	}
 }
