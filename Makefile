@@ -3,6 +3,9 @@ all: test build run
 APP=`basename $(PWD)`
 IMAGE=$(APP):latest
 
+bench:
+	@go-wrk -c 100 -d 30 http://localhost:8080/index.html
+
 build:
 	@go build -ldflags="-s -w" -pgo=default.pgo -o bin/app
 
