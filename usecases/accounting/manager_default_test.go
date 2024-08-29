@@ -10,6 +10,7 @@ import (
 func TestDefaultManagerChangePassword(t *testing.T) {
 	ctx := context.Background()
 	path := "testdata/test_default_manager_change_password.json"
+	os.MkdirAll("testdata", 0755)
 	os.WriteFile(path, []byte("{}"), 0644)
 	sut := accounting.NewDefaultManager(path)
 	sut.RegisterAccount(ctx, "foo", "bar")
@@ -21,6 +22,7 @@ func TestDefaultManagerChangePassword(t *testing.T) {
 func TestDefaultManagerIsEmailPasswordValid(t *testing.T) {
 	ctx := context.Background()
 	path := "testdata/test_default_manager_is_email_password_valid.json"
+	os.MkdirAll("testdata", 0755)
 	os.WriteFile(path, []byte("{}"), 0644)
 	sut := accounting.NewDefaultManager(path)
 	if err := sut.RegisterAccount(ctx, "foo", "bar"); err != nil {
@@ -37,6 +39,7 @@ func TestDefaultManagerIsEmailPasswordValid(t *testing.T) {
 func TestDefaultManagerRegisterAccount(t *testing.T) {
 	ctx := context.Background()
 	path := "testdata/test_default_manager_register_account.json"
+	os.MkdirAll("testdata", 0755)
 	os.WriteFile(path, []byte("{}"), 0644)
 	sut := accounting.NewDefaultManager(path)
 	if err := sut.RegisterAccount(ctx, "foo", "bar"); err != nil {
