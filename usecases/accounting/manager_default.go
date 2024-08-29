@@ -15,7 +15,7 @@ type defaultManager struct {
 	mutex        sync.Mutex
 }
 
-func (a *defaultManager) ChangePassword(ctx context.Context, email, password string) error {
+func (a *defaultManager) ChangePassword(ctx context.Context, email, password string) (err error) {
 	doneCh := make(chan bool)
 	errCh := make(chan error)
 	go func() {
@@ -36,13 +36,13 @@ func (a *defaultManager) ChangePassword(ctx context.Context, email, password str
 	select {
 	case <-ctx.Done():
 	case <-doneCh:
-	case err := <-errCh:
-		return err
+	case err = <-errCh:
+		return
 	}
-	return nil
+	return
 }
 
-func (a *defaultManager) IsEmailPasswordValid(ctx context.Context, email, password string) bool {
+func (a *defaultManager) IsEmailPasswordValid(ctx context.Context, email, password string) (result bool) {
 	resultCh := make(chan bool)
 	errCh := make(chan error)
 	go func() {
@@ -61,15 +61,14 @@ func (a *defaultManager) IsEmailPasswordValid(ctx context.Context, email, passwo
 	}()
 	select {
 	case <-ctx.Done():
-	case result := <-resultCh:
-		return result
+	case result = <-resultCh:
+		return
 	case <-errCh:
-		return false
 	}
-	return false
+	return
 }
 
-func (a *defaultManager) RegisterAccount(ctx context.Context, email, password string) error {
+func (a *defaultManager) RegisterAccount(ctx context.Context, email, password string) (err error) {
 	doneCh := make(chan bool)
 	errCh := make(chan error)
 	go func() {
@@ -95,10 +94,10 @@ func (a *defaultManager) RegisterAccount(ctx context.Context, email, password st
 	select {
 	case <-ctx.Done():
 	case <-doneCh:
-	case err := <-errCh:
-		return err
+	case err = <-errCh:
+		return
 	}
-	return nil
+	return
 }
 
 func (a *defaultManager) readAccounts() error {

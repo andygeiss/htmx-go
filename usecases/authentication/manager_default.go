@@ -15,16 +15,33 @@ type defaultManager struct {
 	mutex sync.Mutex
 }
 
-func (a *defaultManager) GenerateToken(ctx context.Context, email string) string {
-	prefix := base64.RawStdEncoding.EncodeToString([]byte(email))
-	suffix := base64.RawStdEncoding.EncodeToString(a.hash(email))
-	return fmt.Sprintf("%s.%s", prefix, suffix)
+func (a *defaultManager) GenerateToken(ctx context.Context, email string) (result string) {
+	resultCh := make(chan string)
+	go func() {
+		prefix := base64.RawStdEncoding.EncodeToString([]byte(email))
+		suffix := base64.RawStdEncoding.EncodeToString(a.hash(email))
+		resultCh <- fmt.Sprintf("%s.%s", prefix, suffix)
+	}()
+	select {
+	case <-ctx.Done():
+	case result = <-resultCh:
+	}
+	return
 }
 
-func (a *defaultManager) IsValidToken(ctx context.Context, token string) bool {
-	parts := strings.Split(token, ".")
-	email, _ := base64.RawStdEncoding.DecodeString(parts[0])
-	return token == a.GenerateToken(ctx, string(email))
+func (a *defaultManager) IsValidToken(ctx context.Context, token string) (result bool) {
+	resultCh := make(chan bool)
+	go func() {
+		parts := strings.Split(token, ".")
+		email, _ := base64.RawStdEncoding.DecodeString(parts[0])
+		isValid := token == a.GenerateToken(ctx, string(email))
+		resultCh <- isValid
+	}()
+	select {
+	case <-ctx.Done():
+	case result = <-resultCh:
+	}
+	return
 }
 
 func (a *defaultManager) hash(email string) []byte {

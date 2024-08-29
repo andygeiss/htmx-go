@@ -18,7 +18,7 @@ var efs embed.FS
 
 func main() {
 	cfg := integration.Config{
-		AccountingManager:     accounting.NewDefaultManager("data/accounts.json"),
+		AccountingManager:     accounting.NewDefaultManager("/data/accounts.json"),
 		AssetsPath:            "assets",
 		AuthenticationManager: authentication.NewDefaultManager(),
 		Efs:                   efs,
@@ -40,7 +40,7 @@ func main() {
 	mux.HandleFunc("GET /debug/pprof/profile", pprof.Profile)
 	mux.HandleFunc("GET /debug/pprof/symbol", pprof.Symbol)
 	log.Printf("Start listening ...")
-	if err := http.ListenAndServe("localhost:8080", mux); err != nil {
+	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Printf("Error: %s\n", err.Error())
 	}
 }
