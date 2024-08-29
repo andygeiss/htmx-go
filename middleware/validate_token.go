@@ -8,6 +8,8 @@ import (
 
 func ValidateToken(cfg *integration.Config, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Get the current context
+		ctx := r.Context()
 		// Return early if request URI is excluded.
 		for _, uri := range cfg.ExcludedResources {
 			if r.RequestURI == uri {
@@ -23,7 +25,7 @@ func ValidateToken(cfg *integration.Config, next http.HandlerFunc) http.HandlerF
 			return
 		}
 		token := parts[1]
-		if !cfg.AuthenticationManager.IsValidToken(token) {
+		if !cfg.AuthenticationManager.IsValidToken(ctx, token) {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}

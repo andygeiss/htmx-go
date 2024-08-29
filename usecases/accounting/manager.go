@@ -1,6 +1,9 @@
 package accounting
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 var (
 	ErrorAlreadyRegistered = errors.New("email is already registered")
@@ -10,7 +13,7 @@ var (
 )
 
 type Manager interface {
-	ChangePassword(email, password string) error
-	IsEmailPasswordValid(email, password string) bool
-	RegisterAccount(email, password string) error
+	ChangePassword(ctx context.Context, email, password string) error
+	IsEmailPasswordValid(ctx context.Context, email, password string) bool
+	RegisterAccount(ctx context.Context, email, password string) error
 }

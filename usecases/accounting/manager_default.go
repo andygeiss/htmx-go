@@ -1,6 +1,7 @@
 package accounting
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"sync"
@@ -14,48 +15,88 @@ type defaultManager struct {
 	mutex        sync.Mutex
 }
 
-func (a *defaultManager) ChangePassword(email, password string) error {
-	a.mutex.Lock()
-	defer a.mutex.Unlock()
-	a.readAccounts()
-	if _, exists := a.accounts[email]; !exists {
-		return ErrorNotRegistered
-	}
-	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-	a.accounts[email] = string(hash)
-	if err := a.writeAccounts(); err != nil {
-		return ErrorWrite
+func (a *defaultManager) ChangePassword(ctx context.Context, email, password string) error {
+	doneCh := make(chan bool)
+	errCh := make(chan error)
+	go func() {
+		a.mutex.Lock()
+		defer a.mutex.Unlock()
+		a.readAccounts()
+		if _, exists := a.accounts[email]; !exists {
+			errCh <- ErrorNotRegistered
+			return
+		}
+		hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+		a.accounts[email] = string(hash)
+		if err := a.writeAccounts(); err != nil {
+			errCh <- ErrorWrite
+		}
+		doneCh <- true
+	}()
+	select {
+	case <-ctx.Done():
+	case <-doneCh:
+	case err := <-errCh:
+		return err
 	}
 	return nil
 }
 
-func (a *defaultManager) IsEmailPasswordValid(email, password string) bool {
-	a.mutex.Lock()
-	defer a.mutex.Unlock()
-	a.readAccounts()
-	if hash, exists := a.accounts[email]; exists {
-		if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
-			return false
+func (a *defaultManager) IsEmailPasswordValid(ctx context.Context, email, password string) bool {
+	resultCh := make(chan bool)
+	errCh := make(chan error)
+	go func() {
+		a.mutex.Lock()
+		defer a.mutex.Unlock()
+		a.readAccounts()
+		if hash, exists := a.accounts[email]; exists {
+			if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
+				errCh <- err
+				return
+			}
+			resultCh <- true
+			return
 		}
-		return true
+		resultCh <- false
+	}()
+	select {
+	case <-ctx.Done():
+	case result := <-resultCh:
+		return result
+	case <-errCh:
+		return false
 	}
 	return false
 }
 
-func (a *defaultManager) RegisterAccount(email, password string) error {
-	a.mutex.Lock()
-	defer a.mutex.Unlock()
-	a.readAccounts()
-	if email == "" || password == "" {
-		return ErrorCannotBeEmpty
-	}
-	if _, exists := a.accounts[email]; exists {
-		return ErrorAlreadyRegistered
-	}
-	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-	a.accounts[email] = string(hash)
-	if err := a.writeAccounts(); err != nil {
-		return ErrorWrite
+func (a *defaultManager) RegisterAccount(ctx context.Context, email, password string) error {
+	doneCh := make(chan bool)
+	errCh := make(chan error)
+	go func() {
+		a.mutex.Lock()
+		defer a.mutex.Unlock()
+		a.readAccounts()
+		if email == "" || password == "" {
+			errCh <- ErrorCannotBeEmpty
+			return
+		}
+		if _, exists := a.accounts[email]; exists {
+			errCh <- ErrorAlreadyRegistered
+			return
+		}
+		hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
+		a.accounts[email] = string(hash)
+		if err := a.writeAccounts(); err != nil {
+			errCh <- ErrorWrite
+			return
+		}
+		doneCh <- true
+	}()
+	select {
+	case <-ctx.Done():
+	case <-doneCh:
+	case err := <-errCh:
+		return err
 	}
 	return nil
 }

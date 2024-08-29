@@ -4,6 +4,7 @@ import (
 	"andygeiss/htmx-go/integration"
 	"andygeiss/htmx-go/middleware"
 	"andygeiss/htmx-go/usecases/authentication"
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -20,10 +21,11 @@ func mockupDefaultHandler(am authentication.Manager) http.HandlerFunc {
 
 func TestDefault(t *testing.T) {
 	// Arrange
+	ctx := context.Background()
 	am := authentication.NewDefaultManager()
 	r := httptest.NewRequest(http.MethodGet, "/", nil)
 	w := httptest.NewRecorder()
-	token := am.GenerateToken("test")
+	token := am.GenerateToken(ctx, "test")
 	r.Header.Set("Accept-Encoding", "gzip")
 	r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	// Act

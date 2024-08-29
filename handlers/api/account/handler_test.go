@@ -5,6 +5,7 @@ import (
 	"andygeiss/htmx-go/integration"
 	"andygeiss/htmx-go/usecases/accounting"
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -24,11 +25,12 @@ type registerResponse struct {
 }
 
 func setup(withRegistration bool) *integration.Config {
+	ctx := context.Background()
 	path := "testdata/accounts.json"
 	os.WriteFile(path, []byte("{}"), 0644)
 	acc := accounting.NewDefaultManager(path)
 	if withRegistration {
-		acc.RegisterAccount("test", "test")
+		acc.RegisterAccount(ctx, "test", "test")
 	}
 	cfg := &integration.Config{
 		AccountingManager: acc,

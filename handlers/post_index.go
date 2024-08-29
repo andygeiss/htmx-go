@@ -16,12 +16,13 @@ type postIndexResponse struct {
 func PostIndex(cfg *integration.Config) http.HandlerFunc {
 	te := templates.NewExecutor(cfg.Efs, cfg.AssetsPath).Parse("index.html")
 	return middleware.Default(cfg, func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
 		email := r.PostFormValue("email")
 		password := r.PostFormValue("password")
 		errorMessage := ""
 		token := ""
-		if cfg.AccountingManager.IsEmailPasswordValid(email, password) {
-			token = cfg.AuthenticationManager.GenerateToken(email)
+		if cfg.AccountingManager.IsEmailPasswordValid(ctx, email, password) {
+			token = cfg.AuthenticationManager.GenerateToken(ctx, email)
 		} else {
 			errorMessage = "incorrect email or password"
 		}
